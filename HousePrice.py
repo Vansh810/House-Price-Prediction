@@ -95,3 +95,12 @@ print(f"\nXGBoost Metrics: ")
 print(f"RMSE: {np.sqrt(mean_squared_error(y_test, y_pred_xgbr))}")
 print(f"R^2: {r2_xgbr}")
 
+# Calculate weights based on R^2 values
+total_r2 = r2_reg + r2_forest + r2_xgbr
+weights = [r2_reg / total_r2, r2_forest / total_r2, r2_xgbr / total_r2]
+
+# Ensemble predictions using weighted average
+y_pred_ensemble = (weights[0] * y_pred_reg) + (weights[1] * y_pred_forest) + (weights[2] * y_pred_xgbr)
+print(f"\nEnsemble Model Metrics: ")
+print(f'RMSE: {np.sqrt(mean_squared_error(y_test, y_pred_ensemble))}')
+print(f'R^2: {r2_score(y_test, y_pred_ensemble)}')
